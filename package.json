@@ -1,0 +1,21 @@
+{
+  "name": "static-site",
+  "version": "1.0.0",
+  "description": "# Table of Contents",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.17.1",
+    "inquirer": "^8.2.4",
+    "jest": "^29.4.1",
+    "jsdom": "^21.1.0",
+    "mysql2": "^2.1.0"
+  },
+  "keywords": []
+}
