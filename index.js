@@ -293,7 +293,7 @@ function displayEmployees(){
 
 function updateEmployee(){
 
-    const sql = 'SELECT first_name from employee ';
+    const sql = `SELECT first_name FROM employee`;
     connection.query(sql, (error, results) => {
         if (error) throw error;
 
@@ -303,16 +303,30 @@ function updateEmployee(){
         connection.query(sql1, (error,results) => {
             if(error) throw error;
 
-                //create an array of role titles
+            //create an array of role titles
 
-                const roles = results.map((row) => row.title);
+            const roles = results.map((row) => row.title);
+
+            const sql2 = 'SELECT last_name FROM employee';
+            connection.query(sql2, (error,results) => {
+                if(error) throw error;
+
+                const empLastNames = results.map((row) => row.last_name);
+
 
                 inquirer.prompt([
                     {
                         type: 'list',
                         name: 'empName',
-                        message: 'Please select the employee to update',
+                        message: 'Please select the first employee to update',
                         choices: employeeNames,
+                    },
+
+                    {
+                        type: 'list',
+                        name: 'empLastName',
+                        message: 'Please select last name of employee to update',
+                        choices: empLastNames,
                     },
         
                     {
@@ -321,35 +335,40 @@ function updateEmployee(){
                         message: 'Please select the new role for this employee',
                         choices: roles,
                     },
+
                 ]).then(function(result){
 
                     var roleTitle = result.title;
-                    var name = result.empName;
+                    var first_name = result.empName;
+                    var last_name = result.empLastName;
 
                     console.log(roleTitle);
-                    console.log(name);
+                    console.log(first_name);
 
                     connection.query('SELECT id FROM role WHERE title = ?', roleTitle, function (err, result){
                         if(err) throw err;
-                        updateRole(result[0].id, name);
+                        updateRole(result[0].id, first_name, last_name);
 
                     });
                 });
 
+            });
         });
-    });
+
+    })
 
 }
 
-function updateRole(roleId, name){
+function updateRole(roleId, first_name, last_name){
 
     var role_id = roleId;
-    var emp_name = name;
+    var emp_name = first_name;
+    var emp_last_name = last_name;
 
     console.log(role_id);
-    console.log(name);
+    console.log(emp_name);
 
-    connection.query(`UPDATE employee SET role_id = ? WHERE first_name = ?`, [role_id, emp_name], function(err, result){
+    connection.query(`UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?`, [role_id, emp_name, emp_last_name], function(err, result){
         if(err) throw err;
         displayEmployees();
         init();
